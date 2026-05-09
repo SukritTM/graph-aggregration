@@ -16,10 +16,6 @@ def graph_attn_op_batched(q, k, v, batch, batch_size):
     padded_values = torch.nested.as_nested_tensor(values).to_padded_tensor(0.)
 
     padded_values.shape
-
-    # for i in range(padded_values.shape[0]):
-    #     print(padded_values[i])
-    #     print('\n==============================')
     return torch.matmul(padded_attn_maps, padded_values)
 
 class GraphSelfAttention:

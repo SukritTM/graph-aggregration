@@ -3,7 +3,7 @@ from torch.nn import Linear
 
 def graph_attn_op_batched(q, k, v, batch, batch_size):
     '''
-    Returns a padded tensor of shape (batch_size, max_node_number)
+    Returns a padded tensor of shape (batch_size, max_node_number, embedding_dim)
     '''
     attn_maps = []
     values = []

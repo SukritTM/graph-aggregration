@@ -53,7 +53,18 @@ class GraphMultiHeadSelfAttention:
         return self.out_proj(out)
 
 
-def global_attn_pool(x, batch, attn_layer):
+def global_attn_pool_sample(x, batch, attn_layer):
     x = attn_layer(x, batch)
 
     return x[:, 0, :]
+
+def global_attn_pool_mean(x, batch, attn_layer, guess_tol=1e-5):
+    '''
+    Tries to figure out the true shape by guessing the padding
+    '''
+    x = attn_layer(x, batch)
+    is_not_zero = x.abs() > guess_tol
+    is_not_padding = is_not_zero.sum(dim=-1) > 0
+    num_not_padding = is_not_padding.sum(dim=-1)
+
+    return x.sum(dim=-2) / num_not_padding.unsqueeze(-1)

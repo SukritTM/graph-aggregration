@@ -42,7 +42,7 @@ class GraphMultiHeadSelfAttention:
         self.num_heads = num_heads
         self.inner_dim = inner_dim
         self.heads = torch.nn.ModuleList([
-            GraphSelfAttention(input_dim, inner_dim // num_heads) for _ in range(num_heads)
+            GraphSelfAttention(input_dim, inner_dim) for _ in range(num_heads)
         ])
         self.out_proj = torch.nn.Linear(inner_dim, input_dim, bias=False)
 
@@ -51,3 +51,9 @@ class GraphMultiHeadSelfAttention:
         # Concatenate along the last dimension
         out = torch.cat(head_outputs, dim=-1)
         return self.out_proj(out)
+
+
+def global_attn_pool(x, batch, attn_layer):
+    x = attn_layer(x, batch)
+
+    return x[:, 0, :]
